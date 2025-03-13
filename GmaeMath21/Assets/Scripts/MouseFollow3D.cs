@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class MouseFollow3D : MonoBehaviour
 {
@@ -21,8 +20,7 @@ public class MouseFollow3D : MonoBehaviour
                 targetPosition = hit.point;
             }
         }
-        Vector3 direction = targetPosition.normalized;
-        transform.Translate(direction * speed * Time.deltaTime);
-        
+        Vector3 di = targetPosition - transform.position;
+        transform.Translate(di.normalized * speed * Time.deltaTime);
     }
 }
