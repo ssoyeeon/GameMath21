@@ -15,16 +15,18 @@ public class Hack : MonoBehaviour
     public TMP_Text Oy;     //전체 공격 회수
     public void Rads()
     {
-        if( CriticalCounts + 1 / counts + 1 < 0.1f  && counts !=0 )
+        float asa = CriticalCounts / counts;
+        if (asa < 0.1f  && counts !=0 )
         {
             Oi.text = "Critical";
             CriticalCounts += 1;
             Oq.text = CriticalCounts.ToString();
             Oe.text = "10";
         }
-        else if(CriticalCounts / counts + 1 > 0.1)
+        else if(asa > 0.1 && CriticalCounts != 0)
         {
             Oi.text = "Fail";
+            Debug.Log(CriticalCounts / counts + 1);
         }
         else
         {
@@ -39,7 +41,6 @@ public class Hack : MonoBehaviour
             Oe.text = percent.ToString();
         }
         counts += 1;
-        float asa = counts / CriticalCounts;
         Oy.text = asa.ToString();
         Ow.text = counts.ToString();
     }
