@@ -5,84 +5,56 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Bezier : MonoBehaviour
 {
-    public Transform point0;
-    public Transform point1;
-    public Transform point2;
-    public Transform point3;
-    public GameObject sphere;
+    public Transform p0;
 
-    float timeValue = 0f;
+    public Transform p3;
 
-    [SerializeField] Transform target;
-    [SerializeField] GameObject gameObjectTarget;
-    public LayerMask enemyLayer;
-    float speed = 2f;
-    bool isTarget;
+    [Header("Random Ranges")]
+    public float p1Radius = 2f;
+    public float p1Height = 2f;
+    public float p2Radius = 2f;
+    public float p2Height = 2f;
 
+    public Vector3 p1;
+    public Vector3 p2;
+
+    List<Vector3> points;
+    float time = 0f;
+    public GameObject Sphere;
+
+    private void Awake()
+    {
+        GenerateRandomControlPoints();
+        points = new List<Vector3> { p0.position, p1, p2, p3.position };
+    }
     // Update is called once per frame
     void Update()
     {
-        timeValue += Time.deltaTime / 2f;
-        sphere.transform.position = GetPointOnBezierCurve(point0.position, point1.position, point2.position, point3.position, timeValue);
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            isTarget = true;
-            if (isTarget == true)
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hit, 100f, enemyLayer))
-                {
-                    target = hit.transform;
-                    gameObjectTarget = hit.collider.gameObject;
-                    Quaternion lookRot = Quaternion.LookRotation(target.position - transform.position);
-
-                    float t = 1f - Mathf.Exp(-speed * Time.deltaTime);
-                    transform.rotation = ManualSlerp(transform.rotation, lookRot, t);
-                    gameObjectTarget.gameObject.GetComponent<Renderer>().material.color = Color.red;
-
-                }
-            }
-        }
-        if (Input.GetMouseButtonDown(1))
-        {
-            gameObjectTarget.gameObject.GetComponent<Renderer>().material.color = Color.white;
-            isTarget = false;
-            //transform.position = new Vector3(0f,-1f,-10f);
-        }
-    }
-    Vector3 GetPointOnBezierCurve(Vector3 p0 , Vector3 p1, Vector3 p2, Vector3 p3, float t)
-    {
-        Vector3 a = Vector3.Lerp(p0, p1, t);
-        Vector3 b = Vector3.Lerp(p1, p2, t);
-        Vector3 c = Vector3.Lerp(p2, p3, t);
-        Vector3 ab = Vector3.Lerp(a, b, t);
-        Vector3 bc = Vector3.Lerp(b, c, t);
-        Vector3 abc = Vector3.Lerp(ab, bc, t);
-
-        return abc;
+        time += Time.deltaTime / 2f;
+        Sphere.transform.position = DeCasteljau(points,time);
 
     }
-    Quaternion ManualSlerp(Quaternion from, Quaternion to, float t)
+    
+    void GenerateRandomControlPoints()
     {
-        float dot = Quaternion.Dot(from, to);
-        if (dot < 0f)
+        Vector2 rand1 = Random.insideUnitCircle * p1Radius;
+        p1 = p0.position + new Vector3(rand1.x, 0f, rand1.y);
+        p1.y += p1Height;
+
+        Vector2 rand2 = Random.insideUnitCircle * p2Radius;
+        p2 = p3.position + new Vector3(rand2.x, 0f, rand2.y);
+        p2.y += p2Height;
+    }
+    Vector3 DeCasteljau(List<Vector3> p, float t)
+    {
+        while(p.Count > 1)
         {
-            to = new Quaternion(-to.x, -to.y, -to.z, -to.w);
-            dot = -dot;
+            int last = p.Count - 1;
+            var next = new List<Vector3>(last);
+            for (int i = 0; i < last; i++)
+                next.Add(Vector3.Lerp(p[i], p[i + 1], t));
+            p = next;
         }
-        float theta = Mathf.Acos(dot);
-        float sinTheta = Mathf.Sin(theta);
-
-        float ratioA = Mathf.Sin((1f - t) * theta) / sinTheta;
-        float ratioB = Mathf.Sin(t * theta) / sinTheta;
-
-        Quaternion result = new Quaternion(
-            ratioA * from.x + ratioB * to.x,
-            ratioA * from.y + ratioB * to.y,
-            ratioA * from.z + ratioB * to.z,
-            ratioA * from.w + ratioB * to.w
-        );
-        return result.normalized;
+        return p[0];
     }
 }
