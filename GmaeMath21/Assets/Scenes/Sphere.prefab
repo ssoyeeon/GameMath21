@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3789054727594492092}
   - component: {fileID: 2131856158399647906}
   - component: {fileID: 1603501716502427396}
+  - component: {fileID: -5905906971809592051}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: 00
@@ -28,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 4573333407763511903}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.407712, y: 4.3672023, z: -1.4678199}
+  m_LocalPosition: {x: 0.03687305, y: 6.5570817, z: 0.018025283}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -105,3 +106,23 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-5905906971809592051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4573333407763511903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa12ccfa9b69377448752d8658f10245, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  p0: {fileID: 0}
+  p3: {fileID: 0}
+  p1Radius: 2
+  p1Height: 2
+  p2Radius: 2
+  p2Height: 2
+  p1: {x: 0, y: 0, z: 0}
+  p2: {x: 0, y: 0, z: 0}
