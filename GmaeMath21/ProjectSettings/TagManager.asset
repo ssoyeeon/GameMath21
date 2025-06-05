@@ -6,6 +6,7 @@ TagManager:
   tags:
   - 00
   - RR
+  - Ball
   layers:
   - Default
   - TransparentFX
